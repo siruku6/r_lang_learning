@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  jupyter:
+    # https://github.com/Paperspace/jupyter-docker-stacks/blob/master/datascience-notebook/README.md
+    # https://qiita.com/SolKul/items/32443fb4452f7194bb8c
+    image: jupyter/datascience-notebook
+    user: root
+    ports:
+      - '5002:5002'
+    env_file:
+      - .env
+    environment:
+      - GRANT_SUDO=yes
+      - TZ=Asia/Tokyo
+      # - PYTHONPATH=/working_dir:/working_dir/src:$PYTHONPATH
+    volumes:
+      - ../..:/home/jovyan/work
+    # command: start-notebook.sh --NotebookApp.password='sha1:YOUR_PASSWORD_HASH_VALUE'
+    command: start-notebook.sh --NotebookApp.password=''
+    # jupyter notebook --no-browser --ip=0.0.0.0 --port ${JUPYTER_PORT} --all
+
+    shm_size: '2gb'
+    # Fix slow shutdown of web container
+    init: true
+    # INFO: Following two lines are necessary for the backtrace by pdb
+    stdin_open: true
+    tty: true
